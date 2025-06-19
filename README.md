@@ -48,3 +48,4 @@ python soundcloud_downloader.py
 * `ffmpeg` is required for converting audio to MP3 format
 * The app is packaged with PyInstaller to create a standalone `.exe` for Windows
 * Make sure to place `yt-dlp.exe` and `ffmpeg.exe` alongside the `.exe` file when distributing
+* App is in Polish language
