@@ -33,6 +33,7 @@ pip install customtkinter
 ```bash
 python soundcloud_downloader.py
 ```
+(Or download release)
 
 ## Usage
 
