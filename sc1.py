@@ -4,7 +4,29 @@ import threading
 import os
 import sys
 from tkinter import filedialog, messagebox
+import datetime
+import traceback
 import json
+
+def get_app_path():
+    try:
+        return sys._MEIPASS  # dla .exe z PyInstaller
+    except Exception:
+        return os.path.abspath(".")
+
+log_folder = os.path.join(get_app_path(), "logs")
+os.makedirs(log_folder, exist_ok=True)
+
+log_filename = f"log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+log_path = os.path.join(log_folder, log_filename)
+
+def log(text):
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(text.rstrip() + "\n")
+
+import json
+import datetime
+import traceback
 
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("green")
@@ -38,7 +60,7 @@ def download_songs():
         messagebox.showerror("Błąd", "Wpisz nazwę wykonawcy!")
         return
 
-    url = f"https://soundcloud.com/{artist}"
+    url = f"https://soundcloud.com/{artist}/tracks"
     count = get_track_count(url)
 
     if count is None:
@@ -80,6 +102,7 @@ def download_songs():
         )
 
         for line in process.stdout:
+            log(line)
             log_area.configure(state="normal")
             log_area.insert("end", line)
             log_area.see("end")
@@ -111,4 +134,8 @@ log_area = ctk.CTkTextbox(frame, font=("Consolas", 11), corner_radius=10)
 log_area.pack(fill="both", expand=True)
 log_area.configure(state="disabled")
 
-app.mainloop()
+try:
+    app.mainloop()
+except Exception as e:
+    log("❌ ERROR:\n" + traceback.format_exc())
+    raise
